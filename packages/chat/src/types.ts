@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from 'vue'
+import type { Component, ComputedRef, Ref } from 'vue'
 import type {
   BubbleListProps,
   BubbleProviderProps,
@@ -73,6 +73,16 @@ export interface ChatStructuredDataItem {
 
 export type ChatStructuredData = ChatStructuredDataItem[]
 
+export interface ModelOption {
+  value: string
+  label?: string
+  providerId?: string
+  icon?: Component
+  disabled?: boolean
+  group?: string
+  keywords?: string[]
+}
+
 // 梳理 UI 组件相关的事件
 interface ChatLayoutUiListeners {
   'onUpdate:floatingState'?: (value: LayoutFloatingState) => void
@@ -118,6 +128,12 @@ export interface ChatConversation extends ChatConversationInfo {
   lastError?: unknown | null
 }
 
+export interface ChatRuntimeModels {
+  models: ChatReadable<readonly ModelOption[]>
+  currentModelId: ChatReadable<string | null>
+  selectModel: (value: string) => Promise<void> | void
+}
+
 export interface ChatRuntimeSender {
   disabled: ChatReadable<boolean>
 }
@@ -139,6 +155,7 @@ export interface ChatRuntimeActions {
 export interface ChatRuntime {
   conversations: ChatReadable<readonly ChatConversationInfo[]>
   activeConversation: ChatReadable<ChatConversation | null>
+  models?: ChatRuntimeModels
   sender: ChatRuntimeSender
   actions: ChatRuntimeActions
 }
@@ -221,4 +238,7 @@ export interface ChatFooterSlotProps {
   disabled: boolean
   loading: boolean
   submitDisabled: boolean
+  modelOptions: readonly ModelOption[]
+  currentModelValue: string | null
+  selectModel?: (value: string) => Promise<void> | void
 }

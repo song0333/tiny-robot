@@ -31,6 +31,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.6.0",
     "@opentiny/tiny-robot": "workspace:*",
     "@opentiny/tiny-robot-kit": "workspace:*",
     "@opentiny/tiny-robot-svgs": "workspace:*",

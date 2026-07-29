@@ -1,0 +1,8 @@
+export { default as IconBailian } from './IconBailian.vue'
+export { default as IconClaude } from './IconClaude.vue'
+export { default as IconDeepseek } from './IconDeepseek.vue'
+export { default as IconGemini } from './IconGemini.vue'
+export { default as IconModelscope } from './IconModelscope.vue'
+export { default as IconOllama } from './IconOllama.vue'
+export { default as IconOpenai } from './IconOpenai.vue'
+export { default as IconOpenrouter } from './IconOpenrouter.vue'

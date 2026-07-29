@@ -13,7 +13,7 @@ import {
   type LayoutProps,
 } from '@opentiny/tiny-robot'
 import { chatContextKey } from '@/context'
-import { Conversations, Header, Messages, ScrollToBottom, Sender } from '@/components'
+import { Conversations, Header, Messages, ModelSelector, ScrollToBottom, Sender } from '@/components'
 import { useChatInput } from '@/composables/useChatInput'
 import type {
   ChatFooterSlotProps,
@@ -21,6 +21,7 @@ import type {
   ChatHistorySlotProps,
   ChatMainSlotProps,
   ChatMessageItem,
+  ModelOption,
   ChatRuntime,
   ChatUi,
 } from '@/types'
@@ -57,6 +58,9 @@ const lastError = computed(() => activeConversation.value?.lastError ?? null)
 const senderDisabled = computed(() => runtimeRef.value.sender.disabled.value)
 const isEmpty = computed(() => visibleMessages.value.length === 0)
 const messagesScrollTarget = computed(() => messagesRef.value?.scrollTarget ?? null)
+const modelOptions = computed<readonly ModelOption[]>(() => runtimeRef.value.models?.models.value ?? [])
+const currentModelValue = computed(() => runtimeRef.value.models?.currentModelId.value ?? null)
+const showModelSelector = computed(() => modelOptions.value.length > 1)
 
 const layoutUi = computed(() => uiRef.value.layout)
 const layoutProps = computed<LayoutProps>(() => {
@@ -132,6 +136,9 @@ const footerSlotProps = computed<ChatFooterSlotProps>(() => ({
   disabled: senderDisabled.value,
   loading: requestState.value === 'processing',
   submitDisabled: input.submitDisabled.value,
+  modelOptions: modelOptions.value,
+  currentModelValue: currentModelValue.value,
+  selectModel: runtimeRef.value.models?.selectModel,
 }))
 
 function isMessageHidden(message: ChatMessageItem) {
@@ -219,6 +226,10 @@ function handleRightAsideResize(detail: LayoutAsideResizeValue) {
 function handleRightAsideResizeEnd(detail: LayoutAsideResizeValue) {
   layoutUi.value?.onRightAsideResizeEnd?.(detail)
 }
+
+function handleModelChange(model: ModelOption) {
+  return runtimeRef.value.models?.selectModel(model.value)
+}
 </script>
 
 <template>
@@ -272,8 +283,16 @@ function handleRightAsideResizeEnd(detail: LayoutAsideResizeValue) {
                 <template v-if="$slots['sender-footer']" #footer="slotProps">
                   <slot name="sender-footer" v-bind="slotProps" />
                 </template>
-                <template v-if="$slots['sender-footer-right']" #footer-right="slotProps">
-                  <slot name="sender-footer-right" v-bind="slotProps" />
+                <template v-if="showModelSelector || $slots['sender-footer-right']" #footer-right="slotProps">
+                  <div class="tr-chat__footer-tools">
+                    <ModelSelector
+                      v-if="showModelSelector"
+                      :models="modelOptions"
+                      :model-value="currentModelValue"
+                      @change="handleModelChange"
+                    />
+                    <slot v-if="$slots['sender-footer-right']" name="sender-footer-right" v-bind="slotProps" />
+                  </div>
                 </template>
               </Sender>
             </slot>
@@ -321,6 +340,13 @@ function handleRightAsideResizeEnd(detail: LayoutAsideResizeValue) {
 
 .tr-chat__footer-inner {
   position: relative;
+}
+
+.tr-chat__footer-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .tr-chat__main-inner {

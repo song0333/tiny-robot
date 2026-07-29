@@ -1,4 +1,5 @@
 export { default as TrChat } from './Chat.vue'
+export { ModelSelector } from './components'
 
 export { useKitChatRuntime } from './composables/useKitChatRuntime'
 export { useLocalChatRuntime } from './composables/useLocalChatRuntime'
@@ -22,6 +23,7 @@ export type {
   ChatProcessingState,
   ChatRequestState,
   ChatRuntime,
+  ChatRuntimeModels,
   ChatRuntimeActions,
   ChatRuntimeSender,
   ChatSenderDefaultActions,
@@ -31,4 +33,5 @@ export type {
   ChatSubmitPayload,
   ChatToolCall,
   ChatUi,
+  ModelOption,
 } from './types'

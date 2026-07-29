@@ -1,10 +1,17 @@
 import { computed, shallowRef, type Ref } from 'vue'
 import type { UseConversationReturn } from '@opentiny/tiny-robot-kit'
-import type { ChatConversation, ChatConversationInfo, ChatRuntime, ChatSubmitPayload } from '../types'
+import type {
+  ChatConversation,
+  ChatConversationInfo,
+  ChatRuntime,
+  ChatRuntimeModels,
+  ChatSubmitPayload,
+} from '../types'
 
 export interface UseKitChatRuntimeOptions {
   conversation: UseConversationReturn
   lastError?: Ref<unknown | null>
+  models?: ChatRuntimeModels
   titleFallback?: (text: string) => string
   send?: (payload: ChatSubmitPayload) => Promise<void> | void
 }
@@ -30,6 +37,7 @@ const toChatConversationInfo = (item: {
 export function useKitChatRuntime({
   conversation,
   lastError: errorRef,
+  models,
   titleFallback,
   send,
 }: UseKitChatRuntimeOptions): ChatRuntime {
@@ -116,6 +124,7 @@ export function useKitChatRuntime({
   return {
     conversations: historyItems,
     activeConversation,
+    models,
     sender: {
       disabled,
     },

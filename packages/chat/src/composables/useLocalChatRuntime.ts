@@ -1,8 +1,10 @@
 import { useConversation, type UseConversationOptions } from '@opentiny/tiny-robot-kit'
 import { useKitChatRuntime } from './useKitChatRuntime'
+import type { ChatRuntimeModels } from '../types'
 
 export interface UseLocalChatRuntimeOptions {
   conversation: UseConversationOptions
+  models?: ChatRuntimeModels
   titleFallback?: (text: string) => string
 }
 
@@ -18,6 +20,7 @@ export function useLocalChatRuntime(options: UseLocalChatRuntimeOptions) {
 
   return useKitChatRuntime({
     conversation,
+    models: options.models,
     titleFallback: resolveTitle,
   })
 }
